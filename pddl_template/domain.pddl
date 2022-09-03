@@ -7,7 +7,7 @@
     )
 
     (:types
-        matches keys - items
+        matches keys gates - items
         cells
         colour
     )
@@ -16,7 +16,7 @@
         
         ;Indicates the number of uses left in a key
         (key-infinite-uses ?k - keys)
-
+        
         (key-two-use ?k - keys)
         
         (key-one-use ?k - keys)
@@ -24,8 +24,19 @@
         (key-used-up ?k - keys)
 
         ;Add other predicates needed to model this domain 
-       
-        
+        (location_hero ?c - cells)
+        (has_key ?k - keys ?c - cells)
+        (has_match ?m - matches ?c - cells)
+        (key_color ?k - keys ?c - colour)
+        (location_monster ?c - cells)
+        (closes ?k - keys ?g - gates)
+        (has_gate ?c - cells)
+        (closed ?g - gates)
+        (visited ?c - cells)
+        (empty_handed)
+        (connected ?from ?to -cells)
+        (match_handed)
+        (match_striked ?m - matches)
     )
 
     ;Hero can move if the
@@ -37,10 +48,16 @@
     (:action move
         :parameters (?from ?to - cells)
         :precondition (and 
-                            
-                            
+        (location_hero ?from)
+        (connected ?from ?to)
+        (not (location_monster ?from))
+        (not (location_monster ?to))
+        (not (visited ?to))
         )
         :effect (and 
+        (location_hero ?to)
+        (not (location_hero ?from) )
+        (visited ?from)
                             
                 )
     )
@@ -49,10 +66,16 @@
     (:action move-out-of-monster
         :parameters (?from ?to - cells)
         :precondition (and 
-                            
+        (location_hero ?from)
+        (connected ?from ?to)
+        (location_monster ?from)
+        (not (visited ?to))
         )
         :effect (and 
-                            
+        (not (location_hero ?from))  
+        (location_hero ?to)
+        (visited ?from)
+        
                 )
     )
 
@@ -60,10 +83,19 @@
     (:action move-into-monster
         :parameters (?from ?to - cells ?m - matches)
         :precondition (and 
-                            
+        (location_hero ?from)
+        (connected ?from ?to)
+        (location_monster ?to)
+        (not (visited ?to))  
+        (match_handed)
+        (not (match_striked ?m))
+        
         )
         :effect (and 
-                            
+        (not (location_hero ?from))  
+        (location_hero ?to)
+        (visited ?from)
+        (match_striked ?m)
                 )
     )
     
@@ -82,10 +114,13 @@
     (:action pick-match
         :parameters (?loc - cells ?m - matches)
         :precondition (and 
-                            
+        (location_hero ?loc)
+        (has_match ?m ?loc)
+        (empty_handed)
                       )
         :effect (and
-                            
+        (not (empty_handed))
+        (match_handed)
                 )
     )
     
@@ -104,10 +139,14 @@
     (:action drop-match
         :parameters (?loc - cells ?m - matches)
         :precondition (and 
-                            
+        (not (empty_handed))
+        (match_handed)
+        
                       )
         :effect (and
-                            
+        (has_match ?m ?loc)
+        (empty_handed)
+        (not (match_handed))
                 )
     )
     
@@ -130,10 +169,11 @@
     (:action strike-match
         :parameters (?m - matches)
         :precondition (and 
-                            
+        (match_handed)
+        (not (match_striked ?m))
         )
         :effect (and 
-                           
+        (match_striked ?m)              
         )
     )
     
