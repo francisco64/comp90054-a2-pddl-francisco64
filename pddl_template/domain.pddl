@@ -182,7 +182,7 @@
         (color_key ?k ?c)
         (color_gate ?to ?c)
         (has_gate ?to)
-        (not (visited ?to))
+        ;(not (visited ?to))
         
         
                       )
