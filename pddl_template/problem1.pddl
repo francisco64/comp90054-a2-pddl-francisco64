@@ -29,12 +29,22 @@
     (has_gate cell9)
     (has_gate cell7)
     
+    (color_gate cell5 red)
+    (color_gate cell6 green)
+    (color_gate cell9 green)
+    (color_gate cell7 blue)
+    
     ;Key uses
     (key-two-use k2)
     (key-one-use k3)
-    (key-used-up k1)
+    (key-infinite-uses k1)
     
     ;Key Colours
+    (color_key k1 red)
+    (color_key k2 green)
+    (color_key k3 blue)
+    
+    
     (same_color k1 cell5 red)
     (same_color k2 cell6 green)
     (same_color k2 cell9 green)

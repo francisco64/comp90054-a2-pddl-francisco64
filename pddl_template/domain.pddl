@@ -39,6 +39,8 @@
         (match_handed)
         (key_handed)
         (match_striked ?m - matches)
+        (color_key ?k - keys ?col - colour)
+        (color_gate ?c - cells ?col - colour)
     )
 
     ;Hero can move if the
@@ -55,6 +57,7 @@
         (not (location_monster ?from))
         (not (location_monster ?to))
         (not (visited ?to))
+        
         )
         :effect (and 
         (location_hero ?to)
@@ -63,6 +66,7 @@
                             
                 )
     )
+ 
     
     ;When this action is executed, the hero leaves a location with a monster in it
     (:action move-out-of-monster
@@ -169,17 +173,22 @@
     (:action close-gate
         :parameters (?from ?to - cells ?k - keys ?c - colour)
         :precondition (and 
+        (connected ?from ?to)
         (location_hero ?from)
         (not (empty_handed))
         (key_handed)
         (not (key-used-up ?k))
+        ;(same_color ?k ?to ?c)
+        (color_key ?k ?c)
+        (color_gate ?to ?c)
         (has_gate ?to)
-        (not (closed_gate ?to))
-        (same_color ?k ?to ?c)
+        (not (visited ?to))
         
         
                       )
         :effect (and
+        
+                    
                     (closed_gate ?to)
                     ;When a key has two uses, then it becomes a single use
                     (when (key-two-use ?k) (key-one-use ?k))
