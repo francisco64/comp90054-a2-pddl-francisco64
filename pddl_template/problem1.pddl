@@ -3,11 +3,10 @@
 (define (problem p1-UpdsideDown)
   (:domain UpdsideDown)
   (:objects
-    cell1 cell2 cell3 cell cell5 cell8 cell6 cell4 cell9 cell10 cell7 cell11 - cells
+    cell1 cell2 cell5 cell3 cell8 cell6 cell9 cell4 cell7 cell10 cell11 - cells
     red green blue - colour
     m1 - matches
     k1 k2 k3 - keys
-    g1 g2 g3 - gates
   )
   (:init
 
@@ -24,11 +23,7 @@
     (has_match m1 cell4)
     ;Initial location of Monsters
     (location_monster cell3)
-    ;Initial lcocation of open gates g1: gate in cell5, g2: gate in cell6, g3: gate in cell9, g4:gate in cell7
-    (closes k1 g1) 
-    (closes k2 g2) 
-    (closes k2 g3)
-    (closes k3 g4)
+    ;Initial lcocation of open gates 
     (has_gate cell5)
     (has_gate cell6)
     (has_gate cell9)
@@ -40,38 +35,38 @@
     (key-used-up k1)
     
     ;Key Colours
-    (key_color k1 red)
-    (key_color k2 green)
-    (key_color k3 blue)
+    (same_color k1 cell5 red)
+    (same_color k2 cell6 green)
+    (same_color k2 cell9 green)
+    (same_color k3 cell7 blue)
+    
     ;Graph Connectivity
     (connected cell1 cell2)
     (connected cell2 cell1)
-    (connected cell2 cell3)
-    (connected cell3 cell2)
-    (connected cell3 cell)
-    (connected cell cell3)
     (connected cell2 cell5)
     (connected cell5 cell2)
+    (connected cell2 cell3)
+    (connected cell3 cell2)
     (connected cell5 cell8)
     (connected cell8 cell5)
     (connected cell5 cell6)
     (connected cell6 cell5)
-    (connected cell3 cell4)
-    (connected cell4 cell3)
     (connected cell8 cell9)
     (connected cell9 cell8)
-    (connected cell9 cell10)
-    (connected cell10 cell9)
-    (connected cell9 cell6)
     (connected cell6 cell9)
-    (connected cell6 cell3)
+    (connected cell9 cell6)
     (connected cell3 cell6)
+    (connected cell6 cell3)
+    (connected cell3 cell4)
+    (connected cell4 cell3)
     (connected cell6 cell7)
     (connected cell7 cell6)
-    (connected cell10 cell7)
-    (connected cell7 cell10)
-    (connected cell7 cell4)
     (connected cell4 cell7)
+    (connected cell7 cell4)
+    (connected cell7 cell10)
+    (connected cell10 cell7)
+    (connected cell9 cell10)
+    (connected cell10 cell9)
     (connected cell3 cell11)
     (connected cell11 cell3)
     
@@ -80,10 +75,10 @@
                 ;Hero's Goal Location
                 (location_hero cell11)
                 ;All gates are closed
-                (closed g1)
-                (closed g2)
-                (closed g3)
-                (closed g4)
+                (closed_gate cell5)
+                (closed_gate cell6)
+                (closed_gate cell9)
+                (closed_gate cell7)
                 
   ))
   

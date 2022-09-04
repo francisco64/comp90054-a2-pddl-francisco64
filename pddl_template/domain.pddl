@@ -7,7 +7,7 @@
     )
 
     (:types
-        matches keys gates - items
+        matches keys - items
         cells
         colour
     )
@@ -27,14 +27,15 @@
         (location_hero ?c - cells)
         (has_key ?k - keys ?c - cells)
         (has_match ?m - matches ?c - cells)
-        (key_color ?k - keys ?c - colour)
+        
         (location_monster ?c - cells)
-        (closes ?k - keys ?g - gates)
+        (same_color ?k - keys ?c - cells ?col - colour)
+        
+        (closed_gate ?c - cells)
         (has_gate ?c - cells)
-        (closed ?g - gates)
         (visited ?c - cells)
         (empty_handed)
-        (connected ?from ?to -cells)
+        (connected ?from ?to - cells)
         (match_handed)
         (key_handed)
         (match_striked ?m - matches)
@@ -138,6 +139,7 @@
         :precondition (and 
         (not (empty_handed))
         (key_handed)
+        (location_hero ?loc)
                             
                       )
         :effect (and
@@ -153,6 +155,7 @@
         :precondition (and 
         (not (empty_handed))
         (match_handed)
+        (location_hero ?loc)
         
                       )
         :effect (and
@@ -164,14 +167,20 @@
     
     ;Hero's disarm the trap with his hand
     (:action close-gate
-        :parameters (?from ?to - cells ?k - keys ?c - colour ?g - gates)
+        :parameters (?from ?to - cells ?k - keys ?c - colour)
         :precondition (and 
-        (has_gate ?to)
-        (closes ?k ?g)
+        (location_hero ?from)
+        (not (empty_handed))
+        (key_handed)
         (not (key-used-up ?k))
+        (has_gate ?to)
+        (not (closed_gate ?to))
+        (same_color ?k ?to ?c)
+        
+        
                       )
         :effect (and
-                    (closed ?g)
+                    (closed_gate ?to)
                     ;When a key has two uses, then it becomes a single use
                     (when (key-two-use ?k) (key-one-use ?k))
                     ;When a key has a single use, it becomes used-up
