@@ -36,6 +36,7 @@
         (empty_handed)
         (connected ?from ?to -cells)
         (match_handed)
+        (key_handed)
         (match_striked ?m - matches)
     )
 
@@ -103,9 +104,15 @@
     (:action pick-key
         :parameters (?loc - cells ?k - keys)
         :precondition (and 
-                            
+        (location_hero ?loc)
+        (has_key ?k ?loc)
+        (empty_handed)
+        
                       )
         :effect (and
+        (key_handed)
+        (not (has_key ?k ?loc))
+        (not (empty_handed))
                             
                 )
     )
@@ -121,6 +128,7 @@
         :effect (and
         (not (empty_handed))
         (match_handed)
+        (not (has_match ?m ?loc))
                 )
     )
     
@@ -128,10 +136,14 @@
     (:action drop-key
         :parameters (?loc - cells ?k - keys)
         :precondition (and 
+        (not (empty_handed))
+        (key_handed)
                             
                       )
         :effect (and
-                            
+        (has_key ?k ?loc)
+        (empty_handed)
+        (not (key_handed))              
                 )
     )
 
@@ -152,12 +164,14 @@
     
     ;Hero's disarm the trap with his hand
     (:action close-gate
-        :parameters (?from ?to - cells ?k - keys ?c - colour)
+        :parameters (?from ?to - cells ?k - keys ?c - colour ?g - gates)
         :precondition (and 
-                            
+        (has_gate ?to)
+        (closes ?k ?g)
+        (not (key-used-up ?k))
                       )
         :effect (and
-
+                    (closed ?g)
                     ;When a key has two uses, then it becomes a single use
                     (when (key-two-use ?k) (key-one-use ?k))
                     ;When a key has a single use, it becomes used-up
